@@ -4,7 +4,7 @@
 \geometry{a4paper, margin=1in}
 \usepackage{enumitem}
 \usepackage{graphicx}  % For including images
-\usepackage{parskip}   % For better spacing
+% \usepackage{parskip}   % For better spacing
 \usepackage{xifthen}   % For conditional statements
 
 % Define default values for personal data
@@ -45,7 +45,7 @@
 % Define the \education command
 \newcommand{\education}[1]{
     \section*{Bildung}
-    \begin{itemize}[left=0pt]
+    \begin{itemize}[left=0pt, label={--}]
         #1
     \end{itemize}
 }
@@ -59,7 +59,7 @@
 % Define the \career command
 \newcommand{\career}[1]{
     \section*{Berufserfahrung}
-    \begin{itemize}[left=0pt]
+    \begin{itemize}[left=0pt, label={--}]
         #1
     \end{itemize}
 }
@@ -102,8 +102,11 @@
 % Skills Section with custom entries
 \skills{
     \item Programmierung in Python
+    \item Programmierung in C\#
+    \item Programmierung in Php
+    \item Programmierung in C
     \item Webentwicklung mit HTML, CSS, JavaScript
-    \item Datenbankmanagement mit SQL
+    \item Datenbankmanagement mit SQL (Oracle, Maria, MySQL)
     \item Nutzung von Versionierungssystemen wie Git
 }
 
