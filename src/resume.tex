@@ -81,7 +81,7 @@
 
 % Define the \careerlabel (Label, Value)
 \newcommand{\careerlabel}[2]{
-    #1 & #2 \\
+    #1 & \makecell[lt]{#2} \\
 }
 
 % Define the \career command (careeritem)
@@ -109,8 +109,9 @@
 
 % project item (project)
 \newcommand{\projectitem}[2]{
-     #1 & {#2} \\
+     #1 & #2 \\
 }
+
 \begin{document}
 
 % Overwrite the default personal data
@@ -128,30 +129,40 @@
 % Work Experience Section with custom entries
 \career{
     \careeritem{Jan 2020 -- Present}{Tech Company, Example City}{Senior Software Engineer}{
-         \careerlabel{Responsibilities}{\tabitem Continued development of the application}
-         \careerlabel{}{\tabitem Led a team of 5 software engineers}
-         \careerlabel{}{\tabitem Architected and implemented new features}
-         \careerlabel{}{\tabitem Collaborated with cross-functional teams to design scalable solutions}
-         \careerlabel{}{\tabitem Mentored junior developers and conducted code reviews}
+         \careerlabel{Responsibilities}{
+            \tabitem Led a team of 5 software engineers\\
+            \tabitem Architected and implemented new features\\
+            \tabitem Collaborated with cross-functional teams to design scalable solutions\\
+            \tabitem Mentored junior developers and conducted code reviews        
+         }
+         \careerlabel{Projects}{\tabitem Developed a real-time analytics dashboard using React and AWS\\
+             \tabitem Led the migration of legacy systems to microservices architecture\\
+             \tabitem Implemented CI/CD pipelines reducing deployment time by 50\%
+         }
+         
+         
          \careerlabel{Technologies Used}{Python, Java, Docker, Kubernetes, AWS, React}
-         \careerlabel{}{\tabitem Led the migration of legacy systems to microservices architecture}
-         \careerlabel{}{\tabitem Implemented CI/CD pipelines reducing deployment time by 50\%}
-         \careerlabel{Projects}{\tabitem Developed a real-time analytics dashboard using React and AWS}
     }
+    
     \careeritem{Jan 2017 -- Dec 2019}{Another Tech Company, Example City}{Software Engineer}{
-        \careerlabel{Responsibilities}{\tabitem Developed and maintained web applications}
-        \careerlabel{}{\tabitem Optimized application performance and scalability}
-        \careerlabel{}{\tabitem Integrated third-party APIs into existing platforms}
-        \careerlabel{}{\tabitem Participated in agile development processes}
-        \careerlabel{}{\tabitem Provided on-call support and resolved critical issues}
+        \careerlabel{Responsibilities}{
+            \tabitem Developed and maintained web applications\\
+            \tabitem Optimized application performance and scalability\\
+            \tabitem Integrated third-party APIs into existing platforms\\
+            \tabitem Participated in agile development processes\\
+            \tabitem Provided on-call support and resolved critical issues
+        }
         \careerlabel{Technologies Used}{PHP, MySQL, jQuery, Git, Jenkins, AWS}
     }
+    
     \careeritem{Jul 2014 -- Dec 2016}{Some Tech Firm, Big City}{Junior Developer}{
-        \careerlabel{Responsibilities}{\tabitem Assisted in the development of backend services}
-        \careerlabel{}{\tabitem Wrote and maintained unit and integration tests}
-        \careerlabel{}{\tabitem Collaborated with senior developers on key projects}
-        \careerlabel{}{\tabitem Debugged and fixed software bugs}
-        \careerlabel{}{\tabitem Documented software components and APIs}
+        \careerlabel{Responsibilities}{
+            \tabitem Assisted in the development of backend services\\
+            \tabitem Wrote and maintained unit and integration tests\\
+            \tabitem Collaborated with senior developers on key projects\\
+            \tabitem Debugged and fixed software bugs\\
+            \tabitem Documented software components and APIs
+        }
         \careerlabel{Technologies Used}{Java, SQL, Bash, SVN, Jenkins}
     }
 }
@@ -181,6 +192,13 @@
     \projectitem{\textbf{Personal Portfolio Website}}{Designed and developed a responsive personal portfolio website using HTML5, CSS3, JavaScript, and React. The website showcases my projects, blog, and contact information. Hosted on GitHub Pages.}
     \projectitem{\textbf{Home Automation System}}{Created a home automation system using Raspberry Pi, Python, and MQTT protocol. Integrated various IoT devices like lights, thermostats, and cameras, allowing remote control via a mobile app.}
     \projectitem{\textbf{Open-Source Contribution}}{Contributed to an open-source Python project focused on data analysis and visualization. Implemented new features, optimized existing code, and wrote unit tests to improve the project's overall stability.}
+    
+    \projectitem{TESTs}{
+    Hui, da kommt ein Text.. lang isser nicht aber uiuizi..    
+    \begin{itemize}
+        \item BBB
+    \end{itemize}
+    }
 }
 
 
