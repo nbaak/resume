@@ -1,16 +1,26 @@
 \documentclass{scrartcl}
-\usepackage[ngerman]{babel}
+\usepackage[english]{babel}
 \usepackage{geometry}
 \geometry{a4paper, margin=1in}
 \usepackage{enumitem}
 \usepackage{graphicx}  % For including images
 % \usepackage{parskip}   % For better spacing
 \usepackage{xifthen}   % For conditional statements
+\usepackage{pgffor}  % Needed for \foreach loop
+\usepackage{array}   % For better table control
+\usepackage{xparse}
+\usepackage{tabularx}
+\usepackage{longtable}
+
+\newcommand{\tabitem}{~~\llap{\tiny$\bullet$}~~}
+\newcommand{\comment}[1]{\directlua{-- #1}}
+\newcommand{\leftcolsize}{4.5cm}
+\newcommand{\rightshift}{>{\raggedleft}p{\leftcolsize}}
 
 % Define default values for personal data
 \newcommand{\name}{Max Mustermann}
-\newcommand{\birthdate}{1. Januar 1990}
-\newcommand{\address}{Musterstraße 123, 12345 Musterstadt}
+\newcommand{\birthdate}{1 January 1990}
+\newcommand{\address}{123 Example Street, 12345 Example City}
 \newcommand{\phone}{+49 123 456789}
 \newcommand{\email}{max.mustermann@example.com}
 \newcommand{\photo}{photo.jpg} % Default photo
@@ -20,17 +30,18 @@
 
 % Define the \personaldata command with photo and optional GitHub
 \newcommand{\personaldata}{
-    \begin{minipage}{0.75\textwidth}
-        \begin{tabular}{rl}
+    \section*{Personal Information}
+    \begin{minipage}[t]{0.8\textwidth}
+        \begin{tabular}[h]{>{\raggedleft}p{\leftcolsize}|l}
         Name: & \name \\
-        Geburtsdatum: & \birthdate \\
-        Adresse: & \address \\
-        Telefon: & \phone \\
+        Date of Birth: & \birthdate \\
+        Address: & \address \\
+        Phone: & \phone \\
         E-Mail: & \email \\
         \ifthenelse{\isundefined{\github}}{}{GitHub: & \github \\}
         \end{tabular}
     \end{minipage}
-    \begin{minipage}{0.24\textwidth}
+    \begin{minipage}{0.2\textwidth}
         \raggedleft
         \includegraphics[width=\linewidth]{\photo} % Include the photo
     \end{minipage}
@@ -39,45 +50,70 @@
 
 % Define the \educationitem command (yearinfo, school, degree)
 \newcommand{\educationitem}[3]{%
-    \item #1 \textbf{#2} \textit{#3}
+    #1 & \textbf{#2} \\
+       & \textit{#3} \\
 }
 
-% Define the \education command
-\newcommand{\education}[1]{
-    \section*{Bildung}
-    \begin{itemize}[left=0pt, label={--}]
-        #1
-    \end{itemize}
+% Define \cvblock (title, items)
+\newcommand{\cvblock}[2]{
+    \section*{#1}
+    \begin{tabular}{>{\raggedleft}p{\leftcolsize}|l}
+    		#2
+    \end{tabular}    
 }
 
-% Define the \careeritem command (yearinfo, position, company)
-\newcommand{\careeritem}[3]{%
-    \item #1 \hfill \textbf{#2} \\
-    \textit{#3}
+% Define \cvblockitem (label, attributes)
+\newcommand{\cvblockitem}[2]{
+    #1 & #2 \\
+}
+
+% Define the \careeritem command (yearinfo, company, position, items)
+\newcommand{\careeritem}[4]{
+    \subsection*{}
+    \begin{tabularx}{\textwidth}[ht]{>{\raggedleft}p{\leftcolsize}|l}
+    #1 & \textbf{#2}\\
+       & \textit{#3}\\
+    #4
+    \end{tabularx}
+}
+
+% Define the \careerlabel (Label, Value)
+\newcommand{\careerlabel}[2]{
+    #1 & #2 \\
 }
 
 % Define the \career command
 \newcommand{\career}[1]{
-    \section*{Berufserfahrung}
-    \begin{itemize}[left=0pt, label={--}]
-        #1
-    \end{itemize}
+    \section*{Work Experience}
+    	#1
 }
 
-% Define the \skills command (list of skills)
-\newcommand{\skills}[1]{
-    \section*{Fähigkeiten}
-    \begin{itemize}[left=0pt, label={--}]
-        #1
-    \end{itemize}
+% todo
+\newcommand{\desiredposition}[1]{
+    \begin{tabular}[ht]{>{\raggedleft}p{\leftcolsize}|l}
+    Desired Position & \textbf{#1} \\
+    \end{tabular}
 }
 
+% private projects
+\newcommand{\privateprojects}[2]{
+    \section*{Private Projects}
+    \begin{tabular}[ht]{>{\raggedleft}p{\leftcolsize}|l}
+       #1
+    \end{tabular}\\    
+    Github: \textbf{\github}
+}
+
+% project item
+\newcommand{\projectitem}[1]{
+     & #1 \\
+}
 \begin{document}
 
 % Overwrite the default personal data
 \renewcommand{\name}{Eduard Example}
-\renewcommand{\birthdate}{15. Februar 1985}
-\renewcommand{\address}{Beispielweg 456, 98765 Beispielstadt}
+\renewcommand{\birthdate}{15 February 1985}
+\renewcommand{\address}{456 Example Avenue, 98765 Example City}
 \renewcommand{\phone}{+49 987 654321}
 \renewcommand{\email}{eduard.example@example.com}
 \renewcommand{\photo}{photo.jpg}
@@ -86,28 +122,48 @@
 % Personal Data Section at the top
 \personaldata
 
-% Education Section with custom entries
-\education{
-    \educationitem{Okt 2012 -- Sep 2014}{Beispiel Universität, Musterstadt}{M.Sc. Informatik}
-    \educationitem{Okt 2009 -- Sep 2012}{Beispiel Universität, Musterstadt}{B.Sc. Informatik}
+% Work Experience Section with custom entries
+\career{
+    \careeritem{Jan 2020 -- Present}{Tech Company, Example City}{Senior Software Engineer}{
+         \careerlabel{Responsibilities}{\tabitem Continued development of the application}
+         \careerlabel{}{\tabitem Led a team of 5 software engineers}
+         \careerlabel{}{\tabitem Architected and implemented new features}
+         \careerlabel{}{\tabitem Collaborated with cross-functional teams to design scalable solutions}
+         \careerlabel{}{\tabitem Mentored junior developers and conducted code reviews}
+         \careerlabel{Technologies Used}{Python, Java, Docker, Kubernetes, AWS, React}
+         \careerlabel{}{\tabitem Led the migration of legacy systems to microservices architecture}
+         \careerlabel{}{\tabitem Implemented CI/CD pipelines reducing deployment time by 50\%}
+         \careerlabel{Projects}{\tabitem Developed a real-time analytics dashboard using React and AWS}
+    }
+    \careeritem{Jan 2017 -- Dec 2019}{Another Tech Company, Example City}{Software Engineer}{
+        \careerlabel{Responsibilities}{\tabitem Developed and maintained web applications}
+        \careerlabel{}{\tabitem Optimized application performance and scalability}
+        \careerlabel{}{\tabitem Integrated third-party APIs into existing platforms}
+        \careerlabel{}{\tabitem Participated in agile development processes}
+        \careerlabel{}{\tabitem Provided on-call support and resolved critical issues}
+        \careerlabel{Technologies Used}{PHP, MySQL, jQuery, Git, Jenkins, AWS}
+    }
+    \careeritem{Jul 2014 -- Dec 2016}{Some Tech Firm, Big City}{Junior Developer}{
+        \careerlabel{Responsibilities}{\tabitem Assisted in the development of backend services}
+        \careerlabel{}{\tabitem Wrote and maintained unit and integration tests}
+        \careerlabel{}{\tabitem Collaborated with senior developers on key projects}
+        \careerlabel{}{\tabitem Debugged and fixed software bugs}
+        \careerlabel{}{\tabitem Documented software components and APIs}
+        \careerlabel{Technologies Used}{Java, SQL, Bash, SVN, Jenkins}
+    }
 }
 
-% Career Section with custom entries
-\career{
-    \careeritem{Jan 2020 -- Present}{Senior Software Engineer}{Tech Company, Musterstadt}
-    \careeritem{Jan 2017 -- Dec 2019}{Software Engineer}{Another Tech Company, Beispielstadt}
-    \careeritem{Jul 2014 -- Dec 2016}{Junior Developer}{Some Tech Firm, Großstadt}
+
+
+% Education Section with custom entries
+\cvblock{Education}{
+    \educationitem{Oct 2012 -- Sep 2014}{Example University, Example City}{M.Sc. Computer Science}
+    \educationitem{Oct 2009 -- Sep 2012}{Example University, Example City}{B.Sc. Computer Science}
 }
 
 % Skills Section with custom entries
-\skills{
-    \item Programmierung in Python
-    \item Programmierung in C\#
-    \item Programmierung in Php
-    \item Programmierung in C
-    \item Webentwicklung mit HTML, CSS, JavaScript
-    \item Datenbankmanagement mit SQL (Oracle, Maria, MySQL)
-    \item Nutzung von Versionierungssystemen wie Git
+\cvblock{Skills}{
+    \cvblockitem{Programming Languages}{Python, Php, Bash}
 }
 
 \end{document}
