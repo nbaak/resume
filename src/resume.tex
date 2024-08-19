@@ -10,11 +10,12 @@
 \usepackage{array}   % For better table control
 \usepackage{xparse}
 \usepackage{tabularx}
-\usepackage{longtable}
+\usepackage{makecell}
 
 \newcommand{\tabitem}{~~\llap{\tiny$\bullet$}~~}
 \newcommand{\comment}[1]{\directlua{-- #1}}
-\newcommand{\leftcolsize}{4.5cm}
+\newcommand{\leftcolsize}{4cm}
+
 \newcommand{\rightshift}{>{\raggedleft}p{\leftcolsize}}
 
 % Define default values for personal data
@@ -57,9 +58,10 @@
 % Define \cvblock (title, items)
 \newcommand{\cvblock}[2]{
     \section*{#1}
-    \begin{tabular}{>{\raggedleft}p{\leftcolsize}|l}
+    \begin{tabularx}{\textwidth}[ht]{>{\raggedleft}p{\leftcolsize}|X}
     		#2
-    \end{tabular}    
+    \end{tabularx}
+    \vspace{0.5em}   
 }
 
 % Define \cvblockitem (label, attributes)
@@ -70,7 +72,7 @@
 % Define the \careeritem command (yearinfo, company, position, items)
 \newcommand{\careeritem}[4]{
     \subsection*{}
-    \begin{tabularx}{\textwidth}[ht]{>{\raggedleft}p{\leftcolsize}|l}
+    \begin{tabularx}{\textwidth}[ht]{>{\raggedleft}p{\leftcolsize}|X}
     #1 & \textbf{#2}\\
        & \textit{#3}\\
     #4
@@ -82,7 +84,7 @@
     #1 & #2 \\
 }
 
-% Define the \career command
+% Define the \career command (careeritem)
 \newcommand{\career}[1]{
     \section*{Work Experience}
     	#1
@@ -95,18 +97,19 @@
     \end{tabular}
 }
 
-% private projects
-\newcommand{\privateprojects}[2]{
+% private projects (projectitem)
+\newcommand{\privateprojects}[1]{
     \section*{Private Projects}
-    \begin{tabular}[ht]{>{\raggedleft}p{\leftcolsize}|l}
+    \begin{tabularx}{\textwidth}[ht]{>{\raggedleft}p{\leftcolsize}|X}
        #1
-    \end{tabular}\\    
-    Github: \textbf{\github}
+    \end{tabularx}
+    \vspace{0.5em} % Add some space after the projects
+    \ifthenelse{\isundefined{\github}}{}{\textbf{GitHub:} \github}
 }
 
-% project item
-\newcommand{\projectitem}[1]{
-     & #1 \\
+% project item (project)
+\newcommand{\projectitem}[2]{
+     #1 & {#2} \\
 }
 \begin{document}
 
@@ -153,8 +156,6 @@
     }
 }
 
-
-
 % Education Section with custom entries
 \cvblock{Education}{
     \educationitem{Oct 2012 -- Sep 2014}{Example University, Example City}{M.Sc. Computer Science}
@@ -163,7 +164,24 @@
 
 % Skills Section with custom entries
 \cvblock{Skills}{
-    \cvblockitem{Programming Languages}{Python, Php, Bash}
+    \cvblockitem{Programming Languages}{Python, Java, PHP, Bash, JavaScript, C++}
+    \cvblockitem{Web Development}{HTML5, CSS3, React, Angular, Node.js}
+    \cvblockitem{Database Management}{MySQL, PostgreSQL, MongoDB, Redis}
+    \cvblockitem{DevOps Tools}{Docker, Kubernetes, Jenkins, Ansible, Terraform}
+    \cvblockitem{Cloud Platforms}{AWS, Azure, Google Cloud}
+    \cvblockitem{Version Control}{Git, SVN}
+    \cvblockitem{Testing}{JUnit, Selenium, pytest, TestNG}
+    \cvblockitem{Agile Methodologies}{Scrum, Kanban, Continuous Integration/Continuous Deployment (CI/CD)}
+    \cvblockitem{Languages}{English (Fluent), German (Native), Spanish (Conversational)}
+    \cvblockitem{Soft Skills}{Team Leadership, Problem Solving, Communication, Time Management}
 }
+
+% Private Projects Section
+\privateprojects{
+    \projectitem{\textbf{Personal Portfolio Website}}{Designed and developed a responsive personal portfolio website using HTML5, CSS3, JavaScript, and React. The website showcases my projects, blog, and contact information. Hosted on GitHub Pages.}
+    \projectitem{\textbf{Home Automation System}}{Created a home automation system using Raspberry Pi, Python, and MQTT protocol. Integrated various IoT devices like lights, thermostats, and cameras, allowing remote control via a mobile app.}
+    \projectitem{\textbf{Open-Source Contribution}}{Contributed to an open-source Python project focused on data analysis and visualization. Implemented new features, optimized existing code, and wrote unit tests to improve the project's overall stability.}
+}
+
 
 \end{document}
